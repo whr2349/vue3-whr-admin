@@ -1,16 +1,21 @@
 {
-  "name": "webadmin",
-  "version": "0.1.0",
-  "private": true,
+  "name": "vue3-whr-webadmin",
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "element-plus": "^1.0.2-beta.28",
+    "mockjs": "^1.1.0",
+    "sass-resources-loader": "^2.1.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue3-whr-ripple-directive": "^1.0.0",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
@@ -23,7 +28,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0-0",
-    "sass": "^1.26.5",
-    "sass-loader": "^8.0.2"
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.4",
+    "vue-cli-plugin-element-plus": "0.0.13"
   }
 }

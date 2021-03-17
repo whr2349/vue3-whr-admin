@@ -1,25 +1,51 @@
+/*
+ * @Author: whr2349
+ * @Date: 2021-03-04 16:02:19
+ * @LastEditors: whr2349
+ * @LastEditTime: 2021-03-09 15:30:40
+ * @Description: file content
+ * @FilePath: \webadmin\src\router\index.js
+ */
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
+    {
+        path: '/',
+        redirect: '/index',
+    },
+    {
+        path: '/index',
+        name: 'index',
+        component: () => import(/* webpackChunkName: "about" */ '../views/index.vue'),
+        meta: {title: "首页"},
+        children: [
+            {
+                path: 'question/questionlist',
+                name: 'question',
+                component: () => import(/* webpackChunkName: "about" */ '../views/question/questionlist.vue'),
+                meta: {title: "题库管理"}
+            },
+            {
+                path: 'activity/activitylist',
+                name: 'activity',
+                component: () => import(/* webpackChunkName: "about" */ '../views/activity/activitylist.vue'),
+                meta: {title: "活动管理"}
+            },
+            {
+                path: 'sys/user',
+                name: 'sys',
+                component: () => import(/* webpackChunkName: "about" */ '../views/sys/user.vue'),
+                meta: {title: "用户管理"}
+            },
+        ]
+    },
+
+
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes
+    history: createWebHashHistory(),
+    routes
 })
 
 export default router
