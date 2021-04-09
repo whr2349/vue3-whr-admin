@@ -11,13 +11,14 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
     {
         path: '/',
-        redirect: '/index',
+        redirect: '/index/question/questionlist',
     },
     {
         path: '/index',
         name: 'index',
         component: () => import(/* webpackChunkName: "about" */ '../views/index.vue'),
         meta: {title: "首页"},
+        redirect: '/index/question/questionlist',
         children: [
             {
                 path: 'question/questionlist',

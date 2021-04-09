@@ -2,7 +2,7 @@
 import Mock from "mockjs"
 
 Mock.setup({
-    timeout: '500-2000'
+    timeout: '200-700'
 })
 
 Mock.mock("mock/userlist", {

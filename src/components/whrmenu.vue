@@ -14,14 +14,14 @@
   >
     <div class="whr-menu">
       <div
-          v-for="(item,index) in menu"
+          v-for="(item,index) in menus"
           :key="index"
       >
         <div
             v-ripple
             class="whr-pmenu-item"
             :class="{activeMenu:activeItem == item.url}"
-            @click="clickitem(item)"
+            @click="clickitem(item,index)"
         >
           <div style="display:flex;">
             <div style="width:30px">
@@ -35,7 +35,7 @@
             </div>
             <div
                 class="xiaoqiu"
-                v-show="pgreenpoint == item.url"
+                v-show="!item.isexpand && pgreen == item.url"
                 :style="{ backgroundColor: pointcolor }"
             ></div>
           </div>
@@ -45,7 +45,7 @@
         <div
             v-if="item.children"
             class="childrendiv"
-            :class="{havechildren:activeItem == item.url && havechildren}"
+            :class="{havechildren:item.isexpand}"
         >
           <div
               v-ripple
@@ -58,7 +58,7 @@
             {{ sb_item.title }}
             <div
                 class="xiaoqiu"
-                v-show="activesbItem == sb_item.url"
+                v-show="$route.path == sb_item.url"
                 :style="{ backgroundColor: pointcolor }"
             ></div>
           </div>
@@ -92,79 +92,68 @@ export default {
       type: String,
       default: "#1ab3a3",
     },
-    //字菜单背景色
-    chbackgroudcolorr: {
-      type: String,
-      default: "#434373",
-    },
-    chbackgroudcolorl: {
-      type: String,
-      default: "#4f3d69",
-    },
+
   },
   data() {
     return {
       activeItem: "", //当前激活父级菜单
       activesbItem: "",
-      havechildren: false,
-      pgreenpoint: "", //父级菜单绿点 url绿点所在菜单
       activeLength: "0px", //子菜单长度
     };
   },
-  // computed: {
-  // 	pgreen() {},
-  // },
+  computed: {
+    //父级菜单绿点位置
+    pgreen() {
+      let u = [];
+      u = this.menus.filter(item => {
+        let xu = []
+        if (item.children.length > 0) {
+          xu = item.children.filter(i => {
+            return i.url == this.$route.path
+          })
+          if (xu.length > 0) {
+            return true
+          } else {
+            return false
+          }
+        } else {
+          return item.url == this.$route.path
+        }
+      })
+      return u[0].url
+    },
+    //每次父级组件发生变更时，子组件中所有的 prop 都将会刷新为最新的值。这意味着你不应该在一个子组件内部改变 prop。如果你这样做了，Vue 会在浏览器的控制台中发出警告。
+    //这个 prop 以一种原始的值传入且需要进行转换。在这种情况下，最好使用这个 prop 的值来定义一个计算属性：
+    menus() {
+      let menus = this.menu.map(item => {
+        if (item.children) {
+          item.isexpand = false;
+        }
+        return item
+      })
+      return menus
+    }
+  },
+  created() {
+
+  },
   mounted() {
     console.log(this.$refs.whrmenu);
+    // 接受props传的值设置样式
     this.$refs.whrmenu.style.setProperty("--shodowcolor", this.pletcolor);
-    this.$refs.whrmenu.style.setProperty(
-        "--chbackgroudcolorr",
-        this.chbackgroudcolorr
-    );
-    this.$refs.whrmenu.style.setProperty(
-        "--chbackgroudcolorl",
-        this.chbackgroudcolorl
-    );
   },
   methods: {
-    clickitem(item) {
-      //点击父菜单,有没有子元素
+    clickitem(item, index) {
+      this.menus[index].isexpand = !item.isexpand;
+      this.activeItem = item.url;
       if (item.children) {
         //有子菜单，设置子元素高度
         this.activeLength = item.children.length * 49 + 20 + "px";
-
-        if (this.activeItem == item.url) {
-          //如果点击的是已经展开的父菜单,收起来，加绿点
-          this.havechildren = !this.havechildren;
-          //如果折叠起来,加绿
-          if (this.havechildren == false) {
-            this.pgreenpoint = item.url;
-            // this.$nextTick(function () {
-            // 	this.pgreenpoint = item.url;
-            // });
-          } else {
-            this.pgreenpoint = "";
-          }
-        } else {
-          this.havechildren = true;
-          // this.pgreenpoint = JSON.parse(
-          // 	JSON.stringify(this.activeItem)
-          // );
-          this.activeItem = item.url;
-        }
-      } else {
-        this.pgreenpoint = "";
-        this.activesbItem = "";
-        this.activeItem = item.url;
-        //直接赋值绿点
-        this.pgreenpoint = item.url;
       }
       this.$emit("dianp", item);
       console.log("当前激活父级菜单", this.activeItem);
-      console.log("绿点所在父级菜单", this.pgreenpoint);
     },
     clicksbitem(item, pitem) {
-      this.pgreenpoint = "";
       //点击子菜单
       this.activesbItem = item.url;
       this.activeItem = pitem.url;
@@ -232,11 +221,7 @@ export default {
 }
 
 .childrendiv {
-  background-image: linear-gradient(
-          to right,
-          var(--chbackgroudcolorl),
-          var(--chbackgroudcolorr)
-  );
+  background-color: rgba(0, 0, 0, 0.2);
   height: 0px;
   transition: all 0.3s linear;
   overflow: hidden;

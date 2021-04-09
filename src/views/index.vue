@@ -32,7 +32,7 @@
         </div>
       </div>
       <div
-          style="overflow-y: scroll;overflow-x:hidden;height:calc(100vh - 70px)"
+          style="overflow-x:hidden;height:calc(100vh - 70px)"
           class="yeyey"
       >
         <whrmenu
