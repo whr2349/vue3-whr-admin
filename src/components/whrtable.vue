@@ -3,7 +3,7 @@
   <div>
     <el-table
         :data="tableData"
-        :height="screen.value.height - tableHeightY"
+        :height="screen.height - tableHeightY"
         style="width: 100%"
         v-bind="$attrs"
         v-loading="loading"
@@ -30,7 +30,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 export default {
   inheritAttrs: false,
-  inject: ['screen'],
+  // inject: ['screen'],
   name: "whrtable",
   //import引入的组件需要注入到对象中才能使用
   components: {},
@@ -59,11 +59,16 @@ export default {
     pageSize: {
       type: Number,
       default: 20,
-    }
+    },
+
   },
   data() {
     //这里存放数据
     return {
+      screen: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+      },
       loading: true,
     }
   },
@@ -78,6 +83,12 @@ export default {
     }
   },
   mounted() {//生命周期 - 挂载完成（可以访问DOM元素）
+    window.onresize = () => {
+      return (() => {
+        this.screen.height = window.innerHeight;
+        this.screen.width = window.innerWidth;
+      })();
+    };
   },
   methods: {//方法集合
 
